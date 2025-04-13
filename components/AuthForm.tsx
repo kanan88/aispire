@@ -1,6 +1,9 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
+import { Form } from '@/components/ui/form'
 import { auth } from '@/firebase/client'
+import { signIn, signUp } from '@/lib/actions/auth.action'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   createUserWithEmailAndPassword,
@@ -12,10 +15,6 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
-import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
-import { signUp } from '@/lib/actions/auth.action'
 import FormField from './FormField'
 
 const authFormSchema = (type: FormType) => {
@@ -74,12 +73,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
         )
 
         const idToken = await userCredential.user.getIdToken()
+
         if (!idToken) {
           toast.error('Sign in Failed. Please try again.')
           return
         }
 
-        // TODO: Add user to session
+        await signIn({
+          email,
+          idToken
+        })
 
         toast.success('Signed in successfully.')
         router.push('/')
