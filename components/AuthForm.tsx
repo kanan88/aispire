@@ -1,16 +1,22 @@
 'use client'
 
+import { auth } from '@/firebase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from 'firebase/auth'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import FormField from '@/components/FormField'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { useRouter } from 'next/navigation'
+import { signUp } from '@/lib/actions/auth.action'
+import FormField from './FormField'
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -33,21 +39,55 @@ const AuthForm = ({ type }: { type: FormType }) => {
     }
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       if (type === 'sign-up') {
+        const { name, email, password } = data
+
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        )
+
+        const result = await signUp({
+          uid: userCredential.user.uid,
+          name: name!,
+          email,
+          password
+        })
+
+        if (!result.success) {
+          toast.error(result.message)
+          return
+        }
+
         toast.success('Account created successfully. Please sign in.')
         router.push('/sign-in')
       } else {
-        toast.success('Logged in successfully.')
+        const { email, password } = data
+
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        )
+
+        const idToken = await userCredential.user.getIdToken()
+        if (!idToken) {
+          toast.error('Sign in Failed. Please try again.')
+          return
+        }
+
+        // TODO: Add user to session
+
+        toast.success('Signed in successfully.')
         router.push('/')
       }
     } catch (error) {
-      console.error(error)
+      console.log(error)
       toast.error(`There was an error: ${error}`)
     }
-
-    console.log('Form submitted:', values)
   }
 
   const isSignIn = type === 'sign-in'
@@ -60,7 +100,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           <h2 className="text-primary-100">AIspire</h2>
         </div>
 
-        <h3>Practice job interview with AI</h3>
+        <h3>Practice job interviews with AI</h3>
 
         <Form {...form}>
           <form
@@ -72,9 +112,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 control={form.control}
                 name="name"
                 label="Name"
-                placeholder="Your name"
+                placeholder="Your Name"
+                type="text"
               />
             )}
+
             <FormField
               control={form.control}
               name="email"
@@ -82,6 +124,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               placeholder="Your email address"
               type="email"
             />
+
             <FormField
               control={form.control}
               name="password"
@@ -91,18 +134,18 @@ const AuthForm = ({ type }: { type: FormType }) => {
             />
 
             <Button className="btn" type="submit">
-              {isSignIn ? 'Sign In' : 'Create Account'}
+              {isSignIn ? 'Sign In' : 'Create an Account'}
             </Button>
           </form>
         </Form>
 
         <p className="text-center">
-          {isSignIn ? 'No account yet?' : 'Already have an account?'}
+          {isSignIn ? 'No account yet?' : 'Have an account already?'}
           <Link
-            href={isSignIn ? '/sign-up' : '/sign-in'}
+            href={!isSignIn ? '/sign-in' : '/sign-up'}
             className="font-bold text-user-primary ml-1"
           >
-            {isSignIn ? 'Sign up' : 'Sign in'}
+            {!isSignIn ? 'Sign In' : 'Sign Up'}
           </Link>
         </p>
       </div>
