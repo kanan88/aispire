@@ -145,10 +145,10 @@
     @apply text-light-100;
   }
   h2 {
-    @apply text-3xl font-semibold;
+    @apply text-xl sm:text-2xl font-semibold;
   }
   h3 {
-    @apply text-2xl font-semibold;
+    @apply text-lg sm:text-xl font-semibold;
   }
   ul {
     @apply list-disc list-inside;
