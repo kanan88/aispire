@@ -80,3 +80,33 @@ export const signIn = async (params: SignInParams) => {
     }
   }
 }
+
+export const getCurrentUser = async () => {
+  const cookieStore = await cookies()
+
+  const sessionCookie = cookieStore.get('session')?.value
+  if (!sessionCookie) return null
+
+  try {
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true)
+
+    const userRecord = await db.collection('users').doc(decodedClaims.uid).get()
+
+    if (!userRecord.exists) return null
+
+    return {
+      id: decodedClaims.id,
+      ...userRecord.data()
+    } as User
+  } catch (e) {
+    console.error('Error getting current user:', e)
+
+    return null
+  }
+}
+
+export const isAuthenticated = async () => {
+  const user = await getCurrentUser()
+
+  return !!user
+}
