@@ -8,7 +8,7 @@ import Agent from '@/components/Agent'
 import DisplayTechIcons from '@/components/DisplayTechIcons'
 import { getCurrentUser } from '@/lib/actions/auth.action'
 
-const InterviewIdPage = async ({ params }: RouteParams) => {
+const InterviewPage = async ({ params }: RouteParams) => {
   const { id } = await params
   const user = await getCurrentUser()
   const interview = await getInterviewById(id)
@@ -18,7 +18,7 @@ const InterviewIdPage = async ({ params }: RouteParams) => {
   return (
     <>
       <div className="flex flex-row gap-4 justify-between">
-        <div className="flex-flex-row gap-4 items-center max-sm:flex-col">
+        <div className="flex flex-row gap-4 items-center max-sm:flex-col">
           <div className="flex flex-row gap-4 items-center">
             <Image
               src={getRandomInterviewCover()}
@@ -49,4 +49,4 @@ const InterviewIdPage = async ({ params }: RouteParams) => {
   )
 }
 
-export default InterviewIdPage
+export default InterviewPage
