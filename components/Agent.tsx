@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { createFeedback } from '@/lib/actions/general.action'
 import { cn } from '@/lib/utils'
 import { vapi } from '@/lib/vapi.sdk'
 
@@ -73,12 +74,13 @@ const Agent = ({
 
   const handleGenerateFeedback = async (messages: SavedMessage[]) => {
     console.log('Generating feedback...', messages)
-    const { success, id } = {
-      success: true,
-      id: 'feedback-id'
-    }
+    const feedbackResult = await createFeedback({
+      interviewId: interviewId!,
+      userId: userId!,
+      transcript: messages
+    })
 
-    if (success && id) {
+    if (feedbackResult && feedbackResult.success && feedbackResult.feedbackId) {
       router.push(`/interview/${interviewId}/feedback`)
     } else {
       console.error('Failed to generate feedback')
