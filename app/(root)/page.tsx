@@ -1,10 +1,19 @@
-import InterviewCard from '@/components/InterviewCard'
-import { Button } from '@/components/ui/button'
-import { dummyInterviews } from '@/constants'
+import {
+  getCurrentUser,
+  getInterviewsByUserId
+} from '@/lib/actions/auth.action'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const HomePage = () => {
+import InterviewCard from '@/components/InterviewCard'
+import { Button } from '@/components/ui/button'
+import { dummyInterviews } from '@/constants'
+
+const HomePage = async () => {
+  const user = await getCurrentUser()
+  const userInterviews = (await getInterviewsByUserId(user?.id || '')) || []
+  const hasPastInterviews = userInterviews.length > 0
+
   return (
     <>
       <section className="card-cta">
@@ -32,11 +41,13 @@ const HomePage = () => {
         <h2>Your Interviews</h2>
 
         <div className="interviews-section">
-          {dummyInterviews.map(interview => (
-            <InterviewCard key={interview.id} {...interview} />
-          ))}
-
-          {/* <p>You haven&apos;t taken any interviews yet</p> */}
+          {hasPastInterviews ? (
+            userInterviews?.map(interview => (
+              <InterviewCard key={interview.id} {...interview} />
+            ))
+          ) : (
+            <p>You haven&apos;t taken any interviews yet</p>
+          )}
         </div>
       </section>
 

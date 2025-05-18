@@ -111,7 +111,7 @@ export const isAuthenticated = async () => {
   return !!user
 }
 
-export const getInterviewByUserId = async (
+export const getInterviewsByUserId = async (
   userId: string
 ): Promise<Interview[] | null> => {
   const interviews = await db
