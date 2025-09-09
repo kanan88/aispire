@@ -138,7 +138,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             />
 
             <Button className="btn" type="submit">
-              {isSignIn ? 'Sign In' : 'Create an Account'}
+              {isSignIn ? 'Sign in' : 'Create an account'}
             </Button>
           </form>
         </Form>
@@ -149,7 +149,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             href={!isSignIn ? '/sign-in' : '/sign-up'}
             className="font-bold text-user-primary ml-1"
           >
-            {!isSignIn ? 'Sign In' : 'Sign Up'}
+            {!isSignIn ? 'Sign in' : 'Sign up'}
           </Link>
         </p>
       </div>
