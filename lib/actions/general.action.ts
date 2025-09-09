@@ -1,9 +1,10 @@
 'use server'
 
-import { feedbackSchema } from '@/constants'
-import { db } from '@/firebase/admin'
 import { google } from '@ai-sdk/google'
 import { generateObject } from 'ai'
+
+import { feedbackSchema } from '@/constants'
+import { db } from '@/firebase/admin'
 
 export const getInterviewsByUserId = async (
   userId: string

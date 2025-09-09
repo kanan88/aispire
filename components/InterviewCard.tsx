@@ -2,10 +2,10 @@ import dayjs from 'dayjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import DisplayTechIcons from '@/components/DisplayTechIcons'
+import { Button } from '@/components/ui/button'
 import { getFeedbackByInterviewId } from '@/lib/actions/general.action'
 import { getRandomInterviewCover } from '@/lib/utils'
-import DisplayTechIcons from './DisplayTechIcons'
-import { Button } from './ui/button'
 
 const InterviewCard = async ({
   id: interviewId,

@@ -1,7 +1,8 @@
 'use server'
 
-import { auth, db } from '@/firebase/admin'
 import { cookies } from 'next/headers'
+
+import { auth, db } from '@/firebase/admin'
 
 const SESSION_DURATION = 60 * 60 * 24 * 7
 
