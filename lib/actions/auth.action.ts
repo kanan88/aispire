@@ -6,22 +6,6 @@ import { auth, db } from '@/firebase/admin'
 
 const SESSION_DURATION = 60 * 60 * 24 * 7
 
-export const setSessionCookie = async (idToken: string) => {
-  const cookieStore = await cookies()
-
-  const sessionCookie = await auth.createSessionCookie(idToken, {
-    expiresIn: SESSION_DURATION * 1000
-  })
-
-  cookieStore.set('session', sessionCookie, {
-    maxAge: SESSION_DURATION,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    sameSite: 'lax'
-  })
-}
-
 export const signUp = async (params: SignUpParams) => {
   const { uid, name, email } = params
 
@@ -31,7 +15,7 @@ export const signUp = async (params: SignUpParams) => {
     if (userRecord.exists) {
       return {
         success: false,
-        message: 'User already exists. Please sign in.'
+        message: 'User already exists. Please sign in instead.'
       }
     }
 
@@ -58,6 +42,22 @@ export const signUp = async (params: SignUpParams) => {
   }
 }
 
+export const setSessionCookie = async (idToken: string) => {
+  const cookieStore = await cookies()
+
+  const sessionCookie = await auth.createSessionCookie(idToken, {
+    expiresIn: SESSION_DURATION * 1000
+  })
+
+  cookieStore.set('session', sessionCookie, {
+    maxAge: SESSION_DURATION,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    sameSite: 'lax'
+  })
+}
+
 export const signIn = async (params: SignInParams) => {
   const { email, idToken } = params
 
@@ -73,11 +73,11 @@ export const signIn = async (params: SignInParams) => {
 
     await setSessionCookie(idToken)
   } catch (e) {
-    console.error('Error signing up:', e)
+    console.error('Error signing up: ', e)
 
     return {
       success: false,
-      message: 'Error to login into account'
+      message: 'Failed to login into account.'
     }
   }
 }
@@ -86,6 +86,7 @@ export const getCurrentUser = async () => {
   const cookieStore = await cookies()
 
   const sessionCookie = cookieStore.get('session')?.value
+
   if (!sessionCookie) return null
 
   try {
@@ -100,7 +101,7 @@ export const getCurrentUser = async () => {
       ...userRecord.data()
     } as User
   } catch (e) {
-    console.error('Error getting current user:', e)
+    console.error('Error getting current user: ', e)
 
     return null
   }

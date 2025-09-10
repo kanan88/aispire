@@ -1,14 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import InterviewCard from '@/components/InterviewCard'
+import { Button } from '@/components/ui/button'
 import { getCurrentUser } from '@/lib/actions/auth.action'
 import {
   getInterviewsByUserId,
   getLatestInterviews
 } from '@/lib/actions/general.action'
-
-import InterviewCard from '@/components/InterviewCard'
-import { Button } from '@/components/ui/button'
 
 const HomePage = async () => {
   const user = await getCurrentUser()
@@ -37,7 +36,7 @@ const HomePage = async () => {
 
         <Image
           src="/robot.png"
-          alt="robot-dude"
+          alt="robot"
           width={400}
           height={400}
           className="max-sm:hidden"
