@@ -196,7 +196,9 @@ const Agent = ({
                 callStatus !== 'CONNECTING' && 'hidden'
               )}
             />
-            <span>{isCallInactiveOrFinished ? 'Call' : '. . .'}</span>
+            <span className="relative">
+              {isCallInactiveOrFinished ? 'Call' : '. . .'}
+            </span>
           </button>
         ) : (
           <button className="btn-disconnect" onClick={handleDisconnect}>

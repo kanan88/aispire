@@ -97,7 +97,7 @@ export const getCurrentUser = async () => {
     if (!userRecord.exists) return null
 
     return {
-      id: decodedClaims.id,
+      id: decodedClaims.uid,
       ...userRecord.data()
     } as User
   } catch (e) {
