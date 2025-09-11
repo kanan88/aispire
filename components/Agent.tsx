@@ -193,10 +193,10 @@ const Agent = ({
             <span
               className={cn(
                 'absolute animate-ping rounded-full opacity-75',
-                callStatus === 'CONNECTING' && 'hidden'
+                callStatus !== 'CONNECTING' && 'hidden'
               )}
             />
-            <span>{isCallInactiveOrFinished ? 'Call' : '...'}</span>
+            <span>{isCallInactiveOrFinished ? 'Call' : '. . .'}</span>
           </button>
         ) : (
           <button className="btn-disconnect" onClick={handleDisconnect}>
