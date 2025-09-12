@@ -52,7 +52,7 @@ const HomePage = async () => {
               <InterviewCard key={interview.id} {...interview} />
             ))
           ) : (
-            <p>You haven&apos;t taken any interviews yet</p>
+            <p>You haven&apos;t taken any interviews yet.</p>
           )}
         </div>
       </section>
@@ -66,7 +66,7 @@ const HomePage = async () => {
               <InterviewCard key={interview.id} {...interview} />
             ))
           ) : (
-            <p>There are no interviews available</p>
+            <p>There are no interviews available.</p>
           )}
         </div>
       </section>
